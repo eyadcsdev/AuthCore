@@ -76,6 +76,7 @@ class InstallCommand extends Command
         $this->components->task('Publishing frontend assets', function () {
             $this->copyDirectory(__DIR__.'/../../stubs/resources/js', resource_path('js'));
             $this->copyDirectory(__DIR__.'/../../stubs/resources/css', resource_path('css'));
+            $this->copyDirectory(__DIR__.'/../../stubs/resources/views', resource_path('views'));
             $this->copyFile(__DIR__.'/../../stubs/vite.config.ts', base_path('vite.config.ts'));
         });
 
@@ -236,7 +237,7 @@ class InstallCommand extends Command
     {
         $command = array_merge([$this->findComposer()], $arguments);
 
-        $process = Process::path(base_path())->run(implode(' ', array_map('escapeshellarg', $command)));
+        $process = Process::path(base_path())->timeout(300)->run(implode(' ', array_map('escapeshellarg', $command)));
 
         if (! $process->successful()) {
             throw new RuntimeException('Failed to install Composer dependencies: '.$process->errorOutput());
@@ -245,7 +246,7 @@ class InstallCommand extends Command
 
     protected function runNodeCommand(string $command): void
     {
-        $process = Process::path(base_path())->run($command);
+        $process = Process::path(base_path())->timeout(300)->run($command);
 
         if (! $process->successful()) {
             throw new RuntimeException('Failed to run Node command: '.$command.PHP_EOL.$process->errorOutput());
