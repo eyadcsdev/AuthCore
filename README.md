@@ -94,6 +94,7 @@ php artisan test --compact
 | CI | GitHub Actions (tests + linter) |
 
 ## Security
+j
 
 - Password reset tokens are hashed before storage
 - Rate limiting on all auth endpoints (5 attempts per minute)
