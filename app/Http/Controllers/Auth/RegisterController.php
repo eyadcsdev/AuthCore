@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Mail\OtpEmail;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+
+class RegisterController extends Controller
+{
+    /**
+     * Handle the incoming request.
+     */
+    public function __invoke(RegisterRequest $request)
+    {
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'otp' => rand(100000, 999999),
+            'role' => $request->role,
+        ]);
+        $user->save();
+        Mail::to($user->email)->send(new OtpEmail($user->otp, $user->email));
+
+        return redirect()->route('email.verify', $user->email)->with('success', 'تم تسجيل المستخدم بنجاح');
+    }
+}
