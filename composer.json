@@ -1,11 +1,15 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/blank-react-starter-kit",
+    "name": "vendor/laravel-auth-starter",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Laravel authentication starter kit with Inertia React, Gruvbox UI, role-based access, social login, passwordless auth, and admin user management.",
     "keywords": [
         "laravel",
-        "framework"
+        "auth",
+        "starter-kit",
+        "inertia",
+        "react",
+        "socialite"
     ],
     "license": "MIT",
     "require": {

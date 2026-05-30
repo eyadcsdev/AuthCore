@@ -26,6 +26,18 @@ class LoginController extends Controller
             return back()->with('error', 'خطأ في كلمة المرور او في البريد الالكتروني');
         }
 
+        if ($user->status === 'pending') {
+            return back()->with('error', 'حسابك قيد المراجعة من قبل الإدارة');
+        }
+
+        if ($user->status === 'rejected') {
+            return back()->with('error', 'تم رفض طلب التسجيل الخاص بك');
+        }
+
+        if ($user->status === 'suspended') {
+            return back()->with('error', 'تم تعليق حسابك');
+        }
+
         if (! $user->email_verified_at) {
             $otp = rand(100000, 999999);
             $user->otp = $otp;
@@ -40,12 +52,30 @@ class LoginController extends Controller
         if (! $user->logout_from_other_devices) {
             Auth::logoutOtherDevices($request->password);
         }
-        $role =[
-            'admin' => '/admin',
-            'student' => '/student',
-            'teacher' => '/teacher',
-            'department_head' => '/department',
-        ];
-        return redirect()->intended($role[$user->role] ?? '/profile')->with('success', 'تم تسجيل الدخول بنجاح');
+
+        $redirectRoute = $this->getDashboardRoute($user);
+
+        return redirect()->intended($redirectRoute)->with('success', 'تم تسجيل الدخول بنجاح');
+    }
+
+    public function getDashboardRoute(User $user): string
+    {
+        if ($user->isSuperAdmin()) {
+            return '/admin';
+        }
+
+        if ($user->hasRole('teacher')) {
+            return '/teacher';
+        }
+
+        if ($user->hasRole('student')) {
+            return '/student';
+        }
+
+        if ($user->hasRole('department-head')) {
+            return '/department';
+        }
+
+        return '/profile';
     }
 }

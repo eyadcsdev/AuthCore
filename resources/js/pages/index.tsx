@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
-import React from 'react';
-import {useRoute} from  "../../../../vendor/tightenco/ziggy";
+import { useRoute } from '../../../../vendor/tightenco/ziggy';
+import { Button } from '../components/ui/Button';
+
 export default function Welcome() {
     const route = useRoute();
 
@@ -8,27 +9,20 @@ export default function Welcome() {
         <>
             <Head title="الرئيسية" />
 
-            <div className="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen" dir="rtl">
+            <div className="flex min-h-screen flex-col items-center justify-center bg-bg-base text-text-primary" dir="rtl">
                 <div className="text-center">
-                    <h1 className="text-5xl font-bold mb-4">مرحباً بك في تطبيق لارافيل</h1>
-                    
-                    <p className="text-lg mb-8">
+                    <h1 className="mb-4 text-5xl font-bold">مرحباً بك في تطبيق لارافيل</h1>
+                    <p className="mb-8 text-lg text-text-secondary">
                         هذه صفحة هبوط بسيطة مبنية باستخدام Laravel و Tailwind CSS.
                     </p>
-                    
-                    <Link 
-                        href={route('login')} 
-                        className="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition"
-                    >
-                        تسجيل الدخول
-                    </Link>
-                    
-                    <Link 
-                        href={route('register')} 
-                        className="px-6 py-3 bg-green-600 rounded-lg hover:bg-green-700 transition mr-4"
-                    >
-                        إنشاء حساب
-                    </Link>
+                    <div className="flex items-center justify-center gap-4">
+                        <Link href={route('login')}>
+                            <Button variant="primary" size="lg">تسجيل الدخول</Button>
+                        </Link>
+                        <Link href={route('register')}>
+                            <Button variant="success" size="lg">إنشاء حساب</Button>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </>

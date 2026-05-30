@@ -8,4 +8,53 @@
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
+
+    --color-bg-base: #282828;
+    --color-bg-surface: #3c3836;
+    --color-bg-elevated: #504945;
+    --color-bg-hover: #665c54;
+
+    --color-border-default: #504945;
+    --color-border-muted: #3c3836;
+
+    --color-text-primary: #ebdbb2;
+    --color-text-secondary: #a89984;
+    --color-text-muted: #7c6f64;
+
+    --color-accent: #458588;
+    --color-accent-hover: #83a598;
+    --color-accent-muted: #45858833;
+
+    --color-success: #98971a;
+    --color-success-hover: #b8bb26;
+    --color-success-muted: #98971a33;
+
+    --color-warning: #d79921;
+    --color-warning-hover: #fabd2f;
+    --color-warning-muted: #d7992133;
+
+    --color-danger: #cc241d;
+    --color-danger-hover: #fb4934;
+    --color-danger-muted: #cc241d33;
+
+    --color-info: #458588;
+    --color-info-hover: #83a598;
+    --color-info-muted: #45858833;
+
+    --color-purple: #b16286;
+    --color-purple-hover: #d3869b;
+    --color-purple-muted: #b1628633;
+
+    --color-aqua: #689d6a;
+    --color-aqua-hover: #8ec07c;
+    --color-aqua-muted: #689d6a33;
+
+    --color-orange: #d65d0e;
+    --color-orange-hover: #fe8019;
+    --color-orange-muted: #d65d0e33;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-bg-elevated) transparent;
 }

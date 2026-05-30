@@ -15,8 +15,8 @@ class ResetPasswordController extends Controller
      */
     public function __invoke(ResetPasswordRequest $request)
     {
-        $result = DB::table('password_reset_tokens')->where('email', $request->email)->where('token', $request->token)->first();
-        if (! $result) {
+        $result = DB::table('password_reset_tokens')->where('email', $request->email)->first();
+        if (! $result || ! Hash::check($request->token, $result->token)) {
             return back()->with('error', 'حدث خطا تاكد من كتابة الايميل بشكل صحيح');
 
         }

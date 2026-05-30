@@ -1,247 +1,128 @@
 import { Head, Link } from '@inertiajs/react';
-import React from 'react';
 import { useRoute } from '../../../../vendor/tightenco/ziggy';
+import AdminLayout from '../../components/AdminLayout';
+import PageHeader from '../../components/PageHeader';
+import { Card } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
+import { Table, TableHead, TableHeaderCell, TableBody, TableRow, TableCell } from '../../components/ui/Table';
+import { cn } from '../../lib/cn';
 
 const stats = [
-    { label: 'المقررات المسجلة', value: '٥', change: '', color: 'blue' },
-    { label: 'إجمالي الساعات', value: '٧٢', change: '+١٥ هذا الفصل', color: 'green' },
-    { label: 'المعدل التراكمي', value: '٣.٦', change: '٠.٢+', color: 'purple' },
-    { label: 'نسبة الحضور', value: '٩٦٪', change: 'هذا الشهر', color: 'amber' },
+    { label: 'المقررات المسجلة', value: '٥', change: '', accent: 'accent' },
+    { label: 'إجمالي الساعات', value: '٧٢', change: '+١٥ هذا الفصل', accent: 'success' },
+    { label: 'المعدل التراكمي', value: '٣.٦', change: '٠.٢+', accent: 'purple' },
+    { label: 'نسبة الحضور', value: '٩٦٪', change: 'هذا الشهر', accent: 'warning' },
 ];
 
 const courses = [
-    {
-        code: 'MATH١٠١',
-        name: 'التفاضل والتكامل',
-        instructor: 'د. أحمد',
-        grade: 91,
-        letter: 'أ',
-        color: 'blue',
-    },
-    {
-        code: 'PHYS٢٠١',
-        name: 'الفيزياء',
-        instructor: 'د. سارة',
-        grade: 78,
-        letter: 'ب',
-        color: 'green',
-    },
-    {
-        code: 'CS٣٠١',
-        name: 'هياكل البيانات',
-        instructor: 'د. خالد',
-        grade: 95,
-        letter: 'أ+',
-        color: 'purple',
-    },
-    {
-        code: 'ENG١٠١',
-        name: 'التعبير الإنجليزي',
-        instructor: 'أ. ليلى',
-        grade: 82,
-        letter: 'ب+',
-        color: 'amber',
-    },
-    {
-        code: 'CHEM١٠١',
-        name: 'الكيمياء العامة',
-        instructor: 'د. نور',
-        grade: 74,
-        letter: 'ج+',
-        color: 'red',
-    },
+    { code: 'MATH١٠١', name: 'التفاضل والتكامل', instructor: 'د. أحمد', grade: 91, letter: 'أ' },
+    { code: 'PHYS٢٠١', name: 'الفيزياء', instructor: 'د. سارة', grade: 78, letter: 'ب' },
+    { code: 'CS٣٠١', name: 'هياكل البيانات', instructor: 'د. خالد', grade: 95, letter: 'أ+' },
+    { code: 'ENG١٠١', name: 'التعبير الإنجليزي', instructor: 'أ. ليلى', grade: 88, letter: 'ب+' },
+    { code: 'ARB٢٠١', name: 'النحو والصرف', instructor: 'د. محمود', grade: 82, letter: 'ب' },
 ];
 
 const assignments = [
-    { course: 'هياكل البيانات', title: 'واجب الأشجار الثنائية', due: 'غداً', urgent: true },
-    { course: 'التفاضل والتكامل', title: 'مسائل التكامل', due: 'بعد ٣ أيام', urgent: false },
-    { course: 'الفيزياء', title: 'تقرير معمل: البصريات', due: 'بعد ٥ أيام', urgent: false },
-    { course: 'التعبير الإنجليزي', title: 'مسودة مقال', due: 'الأسبوع القادم', urgent: false },
+    { name: 'الواجب الثالث: المشتقات', course: 'التفاضل والتكامل', due: 'بعد ٣ أيام', status: 'معلق' },
+    { name: 'تقرير المختبر', course: 'الفيزياء', due: 'بعد أسبوع', status: 'قيد التنفيذ' },
+    { name: 'مشروع هياكل البيانات', course: 'هياكل البيانات', due: 'بعد أسبوعين', status: 'قيد التنفيذ' },
+    { name: 'مقال أدبي', course: 'التعبير الإنجليزي', due: 'غداً!', status: 'متأخر' },
 ];
 
-const colorBar: Record<string, string> = {
-    blue: 'bg-blue-500',
-    green: 'bg-green-500',
-    purple: 'bg-purple-500',
-    amber: 'bg-amber-500',
-    red: 'bg-red-500',
+const accentMap: Record<string, string> = {
+    accent: 'bg-accent',
+    success: 'bg-success',
+    purple: 'bg-purple',
+    warning: 'bg-warning',
 };
 
-const StudentDashboard = () => {
+const statusVariant: Record<string, 'warning' | 'info' | 'danger'> = {
+    'معلق': 'warning',
+    'قيد التنفيذ': 'info',
+    'متأخر': 'danger',
+};
+
+const gradeColor = (grade: number) => {
+    if (grade >= 90) return 'text-success';
+    if (grade >= 80) return 'text-accent-hover';
+    if (grade >= 70) return 'text-warning';
+    return 'text-danger';
+};
+
+export default function StudentDashboard() {
     const route = useRoute();
 
     return (
-        <div className="min-h-screen bg-gray-900 text-gray-100" dir="rtl">
-            <Head title="لوحة التحكم - الطالب" />
+        <AdminLayout title="لوحة الطالب">
+            <Head title="لوحة الطالب" />
 
-            <div className="border-b border-gray-700 bg-gray-800/80 px-6 py-4 backdrop-blur">
-                <div className="mx-auto flex max-w-7xl items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold">لوحة تحكم الطالب</h1>
-                        <p className="text-sm text-gray-400">
-                            تابع مقرراتك ودرجاتك وواجباتك القادمة.
-                        </p>
-                    </div>
-                    <Link
-                        href={route('profile')}
-                        className="rounded-lg bg-gray-700 px-4 py-2 text-sm font-medium text-gray-200 hover:bg-gray-600"
-                    >
-                        الملف الشخصي
-                    </Link>
-                </div>
-            </div>
+            <div className="space-y-6">
+                <PageHeader
+                    title="لوحة الطالب"
+                    description="مرحباً بعودتك! إليك ملخص المقررات والواجبات"
+                />
 
-            <div className="mx-auto max-w-7xl space-y-6 p-6">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {stats.map((stat) => (
-                        <div
-                            key={stat.label}
-                            className="rounded-xl border border-gray-700 bg-gray-800 p-5"
-                        >
+                        <Card key={stat.label}>
                             <div className="flex items-center justify-between">
-                                <p className="text-sm text-gray-400">{stat.label}</p>
-                                <span
-                                    className={`h-2.5 w-2.5 rounded-full ${colorBar[stat.color]}`}
-                                />
+                                <p className="text-sm text-text-muted">{stat.label}</p>
+                                <div className={cn('h-2 w-2 rounded-full', accentMap[stat.accent])} />
                             </div>
-                            <p className="mt-2 text-3xl font-bold">{stat.value}</p>
-                            <p className="mt-1 text-sm text-gray-400">{stat.change}</p>
-                        </div>
+                            <p className="mt-3 text-2xl font-bold text-text-primary">{stat.value}</p>
+                            {stat.change && (
+                                <p className="mt-1 text-xs text-success">{stat.change}</p>
+                            )}
+                        </Card>
                     ))}
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    <div className="rounded-xl border border-gray-700 bg-gray-800 p-5 lg:col-span-2">
-                        <h2 className="mb-4 text-lg font-semibold">درجاتي</h2>
-                        <div className="space-y-4">
-                            {courses.map((course) => (
-                                <div key={course.code}>
-                                    <div className="flex items-center justify-between text-sm">
-                                        <div>
-                                            <div className="flex items-center gap-2">
-                                                <span
-                                                    className={`h-2.5 w-2.5 rounded-full ${colorBar[course.color]}`}
-                                                />
-                                                <span className="font-medium">
-                                                    {course.name}
-                                                </span>
-                                                <span className="text-xs text-gray-500">
-                                                    {course.code}
-                                                </span>
-                                            </div>
-                                            <p className="mt-0.5 text-xs text-gray-500">
-                                                {course.instructor}
-                                            </p>
-                                        </div>
-                                        <div className="text-left">
-                                            <span
-                                                className={`text-lg font-bold ${
-                                                    course.grade >= 90
-                                                        ? 'text-green-400'
-                                                        : course.grade >= 80
-                                                          ? 'text-blue-400'
-                                                          : course.grade >= 70
-                                                            ? 'text-yellow-400'
-                                                            : 'text-red-400'
-                                                }`}
-                                            >
-                                                {course.letter}
+                    <Card className="lg:col-span-2">
+                        <h2 className="mb-4 text-base font-semibold text-text-primary">المقررات الدراسية</h2>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableHeaderCell>المقرر</TableHeaderCell>
+                                    <TableHeaderCell>الكود</TableHeaderCell>
+                                    <TableHeaderCell>المدرس</TableHeaderCell>
+                                    <TableHeaderCell>الدرجة</TableHeaderCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {courses.map((c) => (
+                                    <TableRow key={c.code}>
+                                        <TableCell className="font-medium text-text-primary">{c.name}</TableCell>
+                                        <TableCell className="text-text-muted">{c.code}</TableCell>
+                                        <TableCell>{c.instructor}</TableCell>
+                                        <TableCell>
+                                            <span className={cn('font-semibold', gradeColor(c.grade))}>
+                                                {c.letter} ({c.grade})
                                             </span>
-                                        </div>
-                                    </div>
-                                    <div className="mt-1 flex items-center gap-3">
-                                        <div className="h-2 flex-1 overflow-hidden rounded-full bg-gray-700">
-                                            <div
-                                                className={`h-full rounded-full ${colorBar[course.color]}`}
-                                                style={{ width: `${course.grade}%` }}
-                                            />
-                                        </div>
-                                        <span className="w-10 text-right text-sm font-medium">
-                                            {course.grade}%
-                                        </span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Card>
 
-                    <div className="rounded-xl border border-gray-700 bg-gray-800 p-5">
-                        <h2 className="mb-4 text-lg font-semibold">
-                            الواجبات القادمة
-                        </h2>
+                    <Card>
+                        <h2 className="mb-4 text-base font-semibold text-text-primary">الواجبات القادمة</h2>
                         <div className="space-y-3">
                             {assignments.map((a, i) => (
-                                <div
-                                    key={i}
-                                    className={`rounded-lg border p-3 ${
-                                        a.urgent
-                                            ? 'border-red-500/30 bg-red-500/10'
-                                            : 'border-gray-700 bg-gray-750'
-                                    }`}
-                                >
-                                    <div className="flex items-start justify-between">
-                                        <p className="text-sm font-medium">
-                                            {a.title}
-                                        </p>
-                                        {a.urgent && (
-                                            <span className="rounded bg-red-500/20 px-1.5 py-0.5 text-xs font-medium text-red-400">
-                                                عاجل
-                                            </span>
-                                        )}
+                                <div key={i} className="rounded-lg border border-border-default bg-bg-base p-3">
+                                    <div className="mb-1 flex items-start justify-between gap-2">
+                                        <span className="text-sm font-medium text-text-primary">{a.name}</span>
+                                        <Badge variant={statusVariant[a.status]}>{a.status}</Badge>
                                     </div>
-                                    <p
-                                        className={`mt-1 text-xs ${
-                                            a.urgent
-                                                ? 'text-red-400'
-                                                : 'text-gray-400'
-                                        }`}
-                                    >
-                                        {a.course} · التسليم: {a.due}
-                                    </p>
+                                    <p className="text-xs text-text-muted">{a.course}</p>
+                                    <p className="mt-1 text-xs text-text-muted">تاريخ التسليم: {a.due}</p>
                                 </div>
                             ))}
                         </div>
-                    </div>
-                </div>
-
-                <div className="rounded-xl border border-gray-700 bg-gray-800 p-5">
-                    <h2 className="mb-4 text-lg font-semibold">
-                        الحضور الأسبوعي
-                    </h2>
-                    <div className="flex items-end gap-3" style={{ height: 100 }}>
-                        {['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'].map(
-                            (day, i) => {
-                                const pcts = [100, 100, 100, 80, 100, 0];
-                                const pct = pcts[i];
-                                return (
-                                    <div
-                                        key={day}
-                                        className="flex flex-1 flex-col items-center"
-                                    >
-                                        <div
-                                            className={`w-full rounded-t ${
-                                                pct >= 100
-                                                    ? 'bg-green-500'
-                                                    : pct >= 50
-                                                      ? 'bg-yellow-500'
-                                                      : 'bg-gray-600'
-                                            }`}
-                                            style={{
-                                                height: `${pct * 0.8}px`,
-                                            }}
-                                        />
-                                        <span className="mt-1 text-xs text-gray-500">
-                                            {day}
-                                        </span>
-                                    </div>
-                                );
-                            },
-                        )}
-                    </div>
+                    </Card>
                 </div>
             </div>
-        </div>
+        </AdminLayout>
     );
-};
-
-export default StudentDashboard;
+}

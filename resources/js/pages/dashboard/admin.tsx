@@ -1,12 +1,18 @@
-import { Head, Link } from '@inertiajs/react';
-import React from 'react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import { useRoute } from '../../../../vendor/tightenco/ziggy';
+import AdminLayout from '../../components/AdminLayout';
+import PageHeader from '../../components/PageHeader';
+import { Card } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
+import { Button } from '../../components/ui/Button';
+import { Table, TableHead, TableHeaderCell, TableBody, TableRow, TableCell } from '../../components/ui/Table';
+import { cn } from '../../lib/cn';
 
 const stats = [
-    { label: 'إجمالي المستخدمين', value: '٢,٨٤٧', change: '١٢٪+', color: 'blue' },
-    { label: 'المعلمين', value: '١٢٨', change: '٤٪+', color: 'green' },
-    { label: 'الطلاب', value: '٢,٣٤٠', change: '١٥٪+', color: 'purple' },
-    { label: 'الأقسام', value: '١٢', change: '٠٪', color: 'amber' },
+    { label: 'إجمالي المستخدمين', value: '٢,٨٤٧', change: '١٢٪+', accent: 'accent' },
+    { label: 'المعلمين', value: '١٢٨', change: '٤٪+', accent: 'success' },
+    { label: 'الطلاب', value: '٢,٣٤٠', change: '١٥٪+', accent: 'purple' },
+    { label: 'الأقسام', value: '١٢', change: '٠٪', accent: 'warning' },
 ];
 
 const monthlyRegistrations = [
@@ -34,61 +40,43 @@ const recentUsers = [
     { name: 'خالد سعيد', email: 'khaled@example.com', role: 'معلم', date: 'منذ ٣ أيام' },
 ];
 
-const colorClasses: Record<string, string> = {
-    blue: 'bg-blue-500',
-    green: 'bg-green-500',
-    purple: 'bg-purple-500',
-    amber: 'bg-amber-500',
+const accentMap: Record<string, string> = {
+    accent: 'bg-accent',
+    success: 'bg-success',
+    purple: 'bg-purple',
+    warning: 'bg-warning',
 };
 
 const AdminDashboard = () => {
     const route = useRoute();
+    const { pending_count } = usePage().props as any;
 
     return (
-        <div className="min-h-screen bg-gray-900 text-gray-100" dir="rtl">
+        <AdminLayout title="لوحة تحكم المشرف">
             <Head title="لوحة التحكم - المشرف" />
 
-            <div className="border-b border-gray-700 bg-gray-800/80 px-6 py-4 backdrop-blur">
-                <div className="mx-auto flex max-w-7xl items-center justify-between">
-                    <div>
-                        <h1 className="text-2xl font-bold">لوحة تحكم المشرف</h1>
-                        <p className="text-sm text-gray-400">
-                            مرحباً بعودتك، المشرف. إليك ما يحدث اليوم.
-                        </p>
-                    </div>
-                    <Link
-                        href={route('profile')}
-                        className="rounded-lg bg-gray-700 px-4 py-2 text-sm font-medium text-gray-200 hover:bg-gray-600"
-                    >
-                        الملف الشخصي
-                    </Link>
-                </div>
-            </div>
+            <div className="space-y-6">
+                <PageHeader
+                    title="لوحة تحكم المشرف"
+                    description="مرحباً بعودتك، المشرف. إليك ما يحدث اليوم."
+                />
 
-            <div className="mx-auto max-w-7xl space-y-6 p-6">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     {stats.map((stat) => (
-                        <div
-                            key={stat.label}
-                            className="rounded-xl border border-gray-700 bg-gray-800 p-5"
-                        >
+                        <Card key={stat.label}>
                             <div className="flex items-center justify-between">
-                                <p className="text-sm text-gray-400">{stat.label}</p>
-                                <span
-                                    className={`h-2.5 w-2.5 rounded-full ${colorClasses[stat.color]}`}
-                                />
+                                <p className="text-sm text-text-muted">{stat.label}</p>
+                                <div className={cn('h-2.5 w-2.5 rounded-full', accentMap[stat.accent])} />
                             </div>
-                            <p className="mt-2 text-3xl font-bold">{stat.value}</p>
-                            <p className="mt-1 text-sm text-green-400">{stat.change}</p>
-                        </div>
+                            <p className="mt-2 text-3xl font-bold text-text-primary">{stat.value}</p>
+                            <p className="mt-1 text-sm text-success">{stat.change}</p>
+                        </Card>
                     ))}
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                    <div className="rounded-xl border border-gray-700 bg-gray-800 p-5 lg:col-span-2">
-                        <h2 className="mb-4 text-lg font-semibold">
-                            التسجيلات الشهرية
-                        </h2>
+                    <Card className="lg:col-span-2">
+                        <h2 className="mb-4 text-base font-semibold text-text-primary">التسجيلات الشهرية</h2>
                         <div className="flex items-end gap-2" style={{ height: 160 }}>
                             {monthlyRegistrations.map((r) => (
                                 <div
@@ -96,125 +84,116 @@ const AdminDashboard = () => {
                                     className="group relative flex flex-1 flex-col items-center"
                                 >
                                     <div
-                                        className="w-full rounded-t bg-blue-500 transition-all hover:bg-blue-400"
-                                        style={{
-                                            height: `${(r.users / maxReg) * 140}px`,
-                                        }}
+                                        className="w-full rounded-t bg-accent transition-all hover:bg-accent-hover"
+                                        style={{ height: `${(r.users / maxReg) * 140}px` }}
                                     />
-                                    <span className="mt-1 text-xs text-gray-500">
-                                        {r.month}
-                                    </span>
-                                    <div className="absolute -top-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded bg-gray-700 px-2 py-1 text-xs group-hover:block">
+                                    <span className="mt-1 text-xs text-text-muted">{r.month}</span>
+                                    <div className="absolute -top-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded bg-bg-elevated px-2 py-1 text-xs text-text-primary group-hover:block">
                                         {r.users} مستخدم
                                     </div>
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </Card>
 
-                    <div className="rounded-xl border border-gray-700 bg-gray-800 p-5">
-                        <h2 className="mb-4 text-lg font-semibold">نظرة سريعة</h2>
-                        <div className="space-y-4">
-                            <div>
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-gray-400">التخزين</span>
-                                    <span>٦٤٪</span>
+                    <div className="space-y-6">
+                        <Card>
+                            <h2 className="mb-4 text-base font-semibold text-text-primary">طلبات التسجيل</h2>
+                            <div className="flex flex-col items-center gap-3 py-4 text-center">
+                                <div className={cn(
+                                    'flex h-14 w-14 items-center justify-center rounded-full text-2xl font-bold text-white',
+                                    pending_count > 0 ? 'bg-danger' : 'bg-success',
+                                )}>
+                                    {pending_count}
                                 </div>
-                                <div className="mt-1 h-2 overflow-hidden rounded-full bg-gray-700">
-                                    <div
-                                        className="h-full rounded-full bg-blue-500"
-                                        style={{ width: '64%' }}
-                                    />
+                                <p className="text-sm text-text-muted">
+                                    {pending_count > 0
+                                        ? `يوجد ${pending_count} طلب ${pending_count === 1 ? 'بانتظار' : 'بانتظار'} الموافقة`
+                                        : 'لا توجد طلبات معلقة'}
+                                </p>
+                                {pending_count > 0 && (
+                                    <Link href={route('admin.pending-users.index')}>
+                                        <Button variant="primary" size="sm">
+                                            عرض الطلبات
+                                        </Button>
+                                    </Link>
+                                )}
+                            </div>
+                        </Card>
+
+                        <Card>
+                            <h2 className="mb-4 text-base font-semibold text-text-primary">نظرة سريعة</h2>
+                            <div className="space-y-4">
+                                <div>
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-text-muted">التخزين</span>
+                                        <span className="text-text-primary">٦٤٪</span>
+                                    </div>
+                                    <div className="mt-1 h-2 overflow-hidden rounded-full bg-bg-elevated">
+                                        <div className="h-full rounded-full bg-accent" style={{ width: '64%' }} />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-text-muted">حمل الخادم</span>
+                                        <span className="text-text-primary">٤٢٪</span>
+                                    </div>
+                                    <div className="mt-1 h-2 overflow-hidden rounded-full bg-bg-elevated">
+                                        <div className="h-full rounded-full bg-success" style={{ width: '42%' }} />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-text-muted">الجلسات النشطة</span>
+                                        <span className="text-text-primary">١,٢٨٤</span>
+                                    </div>
+                                    <div className="mt-1 h-2 overflow-hidden rounded-full bg-bg-elevated">
+                                        <div className="h-full rounded-full bg-purple" style={{ width: '78%' }} />
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-text-muted">وقت تشغيل النظام</span>
+                                        <span className="text-text-primary">٩٩.٩٪</span>
+                                    </div>
+                                    <div className="mt-1 h-2 overflow-hidden rounded-full bg-bg-elevated">
+                                        <div className="h-full rounded-full bg-warning" style={{ width: '99%' }} />
+                                    </div>
                                 </div>
                             </div>
-                            <div>
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-gray-400">حمل الخادم</span>
-                                    <span>٤٢٪</span>
-                                </div>
-                                <div className="mt-1 h-2 overflow-hidden rounded-full bg-gray-700">
-                                    <div
-                                        className="h-full rounded-full bg-green-500"
-                                        style={{ width: '42%' }}
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-gray-400">الجلسات النشطة</span>
-                                    <span>١,٢٨٤</span>
-                                </div>
-                                <div className="mt-1 h-2 overflow-hidden rounded-full bg-gray-700">
-                                    <div
-                                        className="h-full rounded-full bg-purple-500"
-                                        style={{ width: '78%' }}
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-gray-400">وقت تشغيل النظام</span>
-                                    <span>٩٩.٩٪</span>
-                                </div>
-                                <div className="mt-1 h-2 overflow-hidden rounded-full bg-gray-700">
-                                    <div
-                                        className="h-full rounded-full bg-amber-500"
-                                        style={{ width: '99%' }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                        </Card>
                     </div>
                 </div>
 
-                <div className="rounded-xl border border-gray-700 bg-gray-800">
-                    <div className="border-b border-gray-700 px-5 py-4">
-                        <h2 className="text-lg font-semibold">أحدث التسجيلات</h2>
-                    </div>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-right text-sm">
-                            <thead>
-                                <tr className="border-b border-gray-700 text-gray-400">
-                                    <th className="px-5 py-3 font-medium">الاسم</th>
-                                    <th className="px-5 py-3 font-medium">البريد</th>
-                                    <th className="px-5 py-3 font-medium">الدور</th>
-                                    <th className="px-5 py-3 font-medium">تاريخ الانضمام</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {recentUsers.map((user) => (
-                                    <tr
-                                        key={user.email}
-                                        className="border-b border-gray-700/50 last:border-0 hover:bg-gray-700/30"
-                                    >
-                                        <td className="px-5 py-3 font-medium">
-                                            {user.name}
-                                        </td>
-                                        <td className="px-5 py-3 text-gray-400">
-                                            {user.email}
-                                        </td>
-                                        <td className="px-5 py-3">
-                                            <span
-                                                className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                                                    user.role === 'معلم'
-                                                        ? 'bg-green-500/20 text-green-400'
-                                                        : 'bg-blue-500/20 text-blue-400'
-                                                }`}
-                                            >
-                                                {user.role}
-                                            </span>
-                                        </td>
-                                        <td className="px-5 py-3 text-gray-400">
-                                            {user.date}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <Card>
+                    <h2 className="mb-4 text-base font-semibold text-text-primary">أحدث التسجيلات</h2>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableHeaderCell>الاسم</TableHeaderCell>
+                                <TableHeaderCell>البريد</TableHeaderCell>
+                                <TableHeaderCell>الدور</TableHeaderCell>
+                                <TableHeaderCell>تاريخ الانضمام</TableHeaderCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {recentUsers.map((user) => (
+                                <TableRow key={user.email}>
+                                    <TableCell className="font-medium text-text-primary">{user.name}</TableCell>
+                                    <TableCell className="text-text-muted">{user.email}</TableCell>
+                                    <TableCell>
+                                        <Badge variant={user.role === 'معلم' ? 'success' : 'info'}>
+                                            {user.role}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-text-muted">{user.date}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </Card>
             </div>
-        </div>
+        </AdminLayout>
     );
 };
 

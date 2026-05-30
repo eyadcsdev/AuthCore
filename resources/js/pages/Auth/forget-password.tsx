@@ -1,10 +1,12 @@
-import { Head, useForm, usePage } from '@inertiajs/react';
-import React from 'react';
-import { useRoute } from "../../../../vendor/tightenco/ziggy";
+import { Head, Link } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
+import { useRoute } from '../../../../vendor/tightenco/ziggy';
+import { Input } from '../../components/ui/Input';
+import { Button } from '../../components/ui/Button';
+import { Alert } from '../../components/ui/Alert';
 
 export default function ForgotPassword() {
     const route = useRoute();
-    
     const { flash } = usePage().props as any;
 
     const { data, setData, post, processing, errors } = useForm({
@@ -17,49 +19,48 @@ export default function ForgotPassword() {
     };
 
     return (
-        <div className="bg-gray-900 text-gray-200 min-h-screen flex justify-center items-center" dir="rtl">
+        <div className="flex min-h-screen items-center justify-center bg-bg-base p-4" dir="rtl">
             <Head title="نسيت كلمة المرور" />
-            
-            <div className="bg-gray-800 rounded-lg shadow-md w-full max-w-md p-6">
-                <h2 className="text-2xl font-semibold text-center mb-6">نسيت كلمة المرور</h2>
-                
-                {flash?.success && (
-                    <div className="bg-green-500 text-white p-4 rounded mb-4 shadow">
-                        {flash.success}
-                    </div>
-                )}
 
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label htmlFor="identifier" className="block text-gray-300 mb-2">البريد الإلكتروني</label>
-                        <input 
-                            type="email" 
-                            id="identifier" 
-                            name="identifier"
+            <div className="w-full max-w-sm space-y-6">
+                <div className="text-center">
+                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-accent text-xl font-bold text-white">
+                        أ
+                    </div>
+                    <h1 className="text-2xl font-semibold text-text-primary">نسيت كلمة المرور</h1>
+                    <p className="mt-1 text-sm text-text-muted">أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين</p>
+                </div>
+
+                <div className="rounded-xl border border-border-default bg-bg-surface p-6">
+                    {flash?.success && (
+                        <div className="mb-4">
+                            <Alert variant="success">{flash.success}</Alert>
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <Input
+                            label="البريد الإلكتروني"
+                            id="identifier"
+                            type="email"
                             value={data.identifier}
                             onChange={(e) => setData('identifier', e.target.value)}
-                            autoComplete="email" 
-                            autoFocus 
-                            required
-                            className={`w-full p-3 rounded bg-gray-700 text-gray-100 border focus:outline-none focus:ring-2 ${
-                                errors.identifier 
-                                    ? 'border-red-500 focus:ring-red-500' 
-                                    : 'border-gray-600 focus:ring-blue-500'
-                            }`}
+                            error={errors.identifier}
+                            autoComplete="email"
+                            autoFocus
                         />
-                        {errors.identifier && (
-                            <div className="text-red-500 text-sm mt-1">{errors.identifier}</div>
-                        )}
-                    </div>
-                    
-                    <button 
-                        type="submit" 
-                        disabled={processing}
-                        className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition disabled:opacity-50"
-                    >
-                        إرسال رابط إعادة تعيين كلمة المرور
-                    </button>
-                </form>
+
+                        <Button type="submit" disabled={processing} className="w-full">
+                            {processing ? 'جارٍ الإرسال...' : 'إرسال رابط إعادة التعيين'}
+                        </Button>
+                    </form>
+                </div>
+
+                <p className="text-center text-sm text-text-muted">
+                    <Link href={route('login')} className="text-accent-hover hover:underline font-medium">
+                        العودة إلى تسجيل الدخول
+                    </Link>
+                </p>
             </div>
         </div>
     );

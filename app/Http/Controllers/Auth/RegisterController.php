@@ -22,7 +22,8 @@ class RegisterController extends Controller
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'otp' => rand(100000, 999999),
-            'role' => $request->role,
+            'status' => 'pending',
+            'requested_role' => $request->role,
         ]);
         $user->save();
         Mail::to($user->email)->send(new OtpEmail($user->otp, $user->email));

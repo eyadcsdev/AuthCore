@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ForgetPasswordRequest;
 use App\Mail\RestEmail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -16,7 +17,7 @@ class ForgetPasswordController extends Controller
         $token = Str::random(60);
         DB::table('password_reset_tokens')->updateOrInsert(
             ['email' => $request->identifier],
-            ['token' => $token, 'created_at' => now()]
+            ['token' => Hash::make($token), 'created_at' => now()]
         );
         Mail::to($request->identifier)->send(new RestEmail($token, $request->identifier));
 

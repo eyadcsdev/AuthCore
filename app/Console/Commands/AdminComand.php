@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
@@ -18,36 +19,43 @@ class AdminComand extends Command
      */
     public function handle()
     {
-         $name = $this->ask('What is the admin name?');
+        $name = $this->ask('What is the admin name?');
         $email = $this->ask('What is the admin email?');
         $password = $this->ask('What is the admin password?');
 
         $validator = Validator::make([
             'name' => $name,
             'email' => $email,
-            'password' => $password
+            'password' => $password,
         ], [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|string|min:6'
-            
+            'password' => 'required|string|min:6',
+
         ]);
 
-        if($validator->fails()){
-            foreach($validator->errors()->all() as $error){
+        if ($validator->fails()) {
+            foreach ($validator->errors()->all() as $error) {
                 $this->error($error);
             }
+
             return;
         }
 
         $user = User::create([
             'name' => $name,
             'email' => $email,
-            'role' => 'admin',
             'email_verified_at' => now(),
             'password' => Hash::make($password),
-            'logout_from_other_devices'=> true
+            'logout_from_other_devices' => true,
+            'status' => 'active',
         ]);
-        $this->info('Admin '. $name .' created successfully');
+
+        $superAdmin = Role::where('slug', 'super-admin')->first();
+        if ($superAdmin) {
+            $user->roles()->attach($superAdmin);
+        }
+
+        $this->info('Admin '.$name.' created successfully');
     }
 }
