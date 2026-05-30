@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "vendor/laravel-auth-starter",
+    "name": "eyadcsdev/auth-core",
     "type": "project",
-    "description": "Laravel authentication starter kit with Inertia React, Gruvbox UI, role-based access, social login, passwordless auth, and admin user management.",
+    "description": "Laravel authentication starter kit with Inertia React, social login, roles & permissions, passwordless auth, and admin user management.",
     "keywords": [
         "laravel",
         "auth",
@@ -89,7 +89,9 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
-            "@php artisan migrate --graceful --ansi"
+            "@php artisan migrate --graceful --ansi",
+            "npm install --no-audit --no-fund",
+            "npm run build"
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
