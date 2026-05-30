@@ -34,6 +34,7 @@
     },
     "autoload": {
         "psr-4": {
+            "AuthCore\\": "src/",
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
@@ -99,6 +100,9 @@
     },
     "extra": {
         "laravel": {
+            "providers": [
+                "AuthCore\\AuthCoreServiceProvider"
+            ],
             "dont-discover": []
         }
     },
