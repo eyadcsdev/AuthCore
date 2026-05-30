@@ -130,9 +130,13 @@ class InstallCommand extends Command
                 '@tailwindcss/vite',
                 '@vitejs/plugin-react',
                 'autoprefixer',
+                'class-variance-authority',
+                'clsx',
                 'laravel-vite-plugin',
                 'react',
                 'react-dom',
+                'react-icons',
+                'tailwind-merge',
                 'tailwindcss',
                 'ziggy-js',
             ];
