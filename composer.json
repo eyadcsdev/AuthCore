@@ -1,7 +1,7 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
     "name": "eyadcsdev/auth-core",
-    "type": "project",
+    "type": "library",
     "description": "Laravel authentication starter kit with Inertia React, social login, roles & permissions, passwordless auth, and admin user management.",
     "keywords": [
         "laravel",
