@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { useRoute } from '../../../vendor/tightenco/ziggy';
+import { useRoute } from 'ziggy-js';
 import {
     FaTachometerAlt, FaUsers, FaUserShield, FaClipboardList,
     FaBars, FaTimes, FaGraduationCap, FaChalkboardTeacher, FaUniversity,

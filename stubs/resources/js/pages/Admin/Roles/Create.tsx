@@ -1,5 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { useRoute } from '../../../../../vendor/tightenco/ziggy';
+import { useRoute } from 'ziggy-js';
 import AdminLayout from '../../../components/AdminLayout';
 import PageHeader from '../../../components/PageHeader';
 import { Card } from '../../../components/ui/Card';

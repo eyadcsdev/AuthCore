@@ -1,6 +1,6 @@
 import { Head, useForm, usePage, router } from '@inertiajs/react';
 import { useRef, useEffect, useState } from 'react';
-import { useRoute } from '../../../../vendor/tightenco/ziggy/src/js';
+import { useRoute } from 'ziggy-js';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 

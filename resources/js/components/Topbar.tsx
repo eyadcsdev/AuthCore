@@ -1,5 +1,5 @@
 import { usePage, Link, router } from '@inertiajs/react';
-import { useRoute } from '../../../vendor/tightenco/ziggy';
+import { useRoute } from 'ziggy-js';
 import { FaBell, FaSignOutAlt, FaUser } from 'react-icons/fa';
 import { Dropdown } from './ui/Dropdown';
 

@@ -1,5 +1,5 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { useRoute } from '../../../../vendor/tightenco/ziggy';
+import { useRoute } from 'ziggy-js';
 import { FaGoogle, FaGithub, FaFacebook } from 'react-icons/fa';
 import { Input } from '../../components/ui/Input';
 import { Checkbox } from '../../components/ui/Checkbox';

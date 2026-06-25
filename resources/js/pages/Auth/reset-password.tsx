@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { useForm, usePage } from '@inertiajs/react';
-import { useRoute } from '../../../../vendor/tightenco/ziggy';
+import { useRoute } from 'ziggy-js';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { Alert } from '../../components/ui/Alert';

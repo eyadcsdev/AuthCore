@@ -1,6 +1,6 @@
 import { usePage, useForm, router } from '@inertiajs/react';
 import { useState } from 'react';
-import { useRoute } from '../../../../vendor/tightenco/ziggy';
+import { useRoute } from 'ziggy-js';
 import AdminLayout from '../../components/AdminLayout';
 import PageHeader from '../../components/PageHeader';
 import { Card, CardHeader } from '../../components/ui/Card';

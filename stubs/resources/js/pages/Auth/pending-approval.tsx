@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import { useRoute } from '../../../../vendor/tightenco/ziggy';
+import { useRoute } from 'ziggy-js';
 import { FaClock } from 'react-icons/fa';
 import { Button } from '../../components/ui/Button';
 

@@ -1,5 +1,5 @@
 import { Head, router } from '@inertiajs/react';
-import { useRoute } from '../../../../vendor/tightenco/ziggy';
+import { useRoute } from 'ziggy-js';
 import { FaGraduationCap, FaChalkboardTeacher } from 'react-icons/fa';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
