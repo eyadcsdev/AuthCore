@@ -79,7 +79,20 @@ php artisan test --compact
 
 ## Screenshots
 
-> *Coming soon*
+<div style="display:flex; gap:12px; justify-content:center; align-items:flex-start;">
+
+  <!-- الصورة الكبيرة (يمين) -->
+  <div>
+    <img src="screenshots/Screenshot.png" width="420">
+  </div>
+
+  <!-- الصورتان (يسار) -->
+  <div style="display:flex; flex-direction:column; gap:12px;">
+    <img src="screenshots/Screenshot2.png" width="300">
+    <img src="screenshots/Screenshot3.png" width="300">
+  </div>
+
+</div>
 
 ## Tech Stack
 
